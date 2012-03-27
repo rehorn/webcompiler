@@ -1,50 +1,50 @@
 {
-	"allowext" : ["png", "jpg", "jpeg", "gif", "js", "css", "html", "htm", "manifest"],
-	"relPath" : "./public/",
-	"tools" : {
-		"googleclosurePath" : "./tools/compile/compiler.jar",
-		"yuicompiressorPath" : "./tools/compile/yuicompressor-2.4.6.jar"
-	},
-	"rules" : {
-		"images" : {
-			"source" : "./images/",
-			"target" : "./cdn/explorer2/images/",
-			"recursive" : 1
-		},
-		"q.service" : {
-			"source" : "./js/q.service.js",
-			"target" : "./cdn/explorer2/js/q.service.js"
-		},
-		"jx.custom" : {
-			"source" : "./tools/jx.custom.js.qzmin",
-			"target" : "./cdn/explorer2/js/jx.custom.js"
-		},
-		"alloy.custom" : {
-			"source" : "./tools/alloy.custom.js.qzmin",
-			"target" : "./cdn/explorer2/js/alloy.custom.js"
-		},
-		"ex.all" : {
-			"source" : "./tools/ex.all.js.qzmin",
-			"target" : "./cdn/explorer2/js/ex.all.js"
-		},
-		"css" : {
-			"source" : "./css/",
-			"target" : "./cdn/explorer2/css/"
-		},
-		"html" : {
-			"source" : "./",
-			"target" : "./webserver/explorer2/",
-	        "ext": ["html"]
-		},
-		"manifest" : {
-			"source" : "./",
-			"target" : "./webserver/explorer2/",
-	        "ext": ["manifest"],
-	        "whitelist": ["cache.manifest"],
-	        "markreplace": 1
-		}
-	},
-	"modes" : {
-		"default": ["images", "q.service", "jx.custom", "alloy.custom", "ex.all", "css", "html", "manifest"]
-	}
+    "allowext" : ["png", "jpg", "jpeg", "gif", "js", "css", "html", "htm", "manifest"],
+    "relPath" : "./public/",
+    "tools" : {
+        "googleclosurePath" : "./tools/compile/compiler.jar",
+        "yuicompiressorPath" : "./tools/compile/yuicompressor-2.4.6.jar"
+    },
+    "rules" : {
+        "images" : {
+            "source" : "./images/",
+            "target" : "./cdn/explorer2/images/",
+            "recursive" : 1
+        },
+        "q.service" : {
+            "source" : "./js/q.service.js",
+            "target" : "./cdn/explorer2/js/q.service.js"
+        },
+        "jx.custom" : {
+            "source" : "./tools/jx.custom.js.qzmin",
+            "target" : "./cdn/explorer2/js/jx.custom.js"
+        },
+        "alloy.custom" : {
+            "source" : "./tools/alloy.custom.js.qzmin",
+            "target" : "./cdn/explorer2/js/alloy.custom.js"
+        },
+        "ex.all" : {
+            "source" : "./tools/ex.all.js.qzmin",
+            "target" : "./cdn/explorer2/js/ex.all.js"
+        },
+        "css" : {
+            "source" : "./css/",
+            "target" : "./cdn/explorer2/css/"
+        },
+        "html" : {
+            "source" : "./",
+            "target" : "./webserver/explorer2/",
+            "ext": ["html"]
+        },
+        "manifest" : {
+            "source" : "./",
+            "target" : "./webserver/explorer2/",
+            "ext": ["manifest"],
+            "whitelist": ["cache.manifest"],
+            "markreplace": 1
+        }
+    },
+    "modes" : {
+        "default": ["images", "q.service", "jx.custom", "alloy.custom", "ex.all", "css", "html", "manifest"]
+    }
 }
