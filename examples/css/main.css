@@ -1,0 +1,15 @@
+body {
+	line-height: 1;
+}
+
+.container{
+	background:url(../images/alloyteam.png);
+}
+
+.container2{
+	background:url(http://qplus2.idqqimg.com/module/complier/examples/images/module1/alloy.png);
+}
+
+.container3{
+	background:url(http://qplus1.idqqimg.com/module/complier/examples/images/module2/alloy.png);
+}

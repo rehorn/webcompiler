@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo 'compiling...'
+python ../compile.py -f ./config.json nocompress
+echo 'compile done.'

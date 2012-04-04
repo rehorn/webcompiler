@@ -1,0 +1,7 @@
+/**
+ * other files
+ */
+
+(function(){
+	
+})();
