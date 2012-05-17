@@ -1,112 +1,112 @@
 {
-	"allowext" : ["png", "jpg", "jpeg", "gif", "js", "css", "html", "htm", "manifest"],
-	"plaintext" : ["js", "css", "html", "htm", "manifest"],
-	"relpath" : "./public/",
-	"tools" : {
-		"googleclosurePath" : "../tools/compiler.jar",
-		"yuicompiressorPath" : "../tools/yuicompressor-2.4.6.jar"
-	},
-	"cmarks" : {
-		"%SUB%" : "1006",
-		"%SUB2%" : "."
-	},
-	"rules" : {
-		"images" : {
-			"source" : "./images/",
-			"target" : "./cdn/compiler/images/",
-			"recursive" : 1
-		},
-		"images.ver" : {
-			"source" : "./images/",
-			"target" : "./cdn/compiler/images/",
-			"recursive" : 1,
-			"version" : 1
-		},
-		"images.mark" : {
-			"source" : "./images/",
-			"target" : "./cdn/compiler/%SUB%/images/",
-			"recursive" : 1,
-			"markreplace" : 1
-		},
-		"whitelist" : {
-			"source" : "./res/",
-			"target" : "./cdn/compiler/res/",
-			"whitelist" : ["whitelist.js"]
-		},
-		"filecopy" : {
-			"source" : "./res/filecopy.js",
-			"target" : "./cdn/compiler/res/filecopy-publish.js"
-		},
-		"filecopy.min" : {
-			"source" : "./res/filecopy.js",
-			"target" : "./cdn/compiler/res/filecopy-min.js",
-			"compress" : 1
-		},
-		"filecopy.mark" : {
-			"source" : "./res/filecopy.js",
-			"target" : "./cdn/compiler/res/%SUB%/filecopy-mark.js",
-			"markreplace" : 1
-		},
-		"filecopy.mark2" : {
-			"source" : "./res/filecopy.js",
-			"target" : "./cdn/compiler/res/%SUB2%/filecopy-mark2.js",
-			"markreplace" : 1
-		},
-		"javascript": {
-			"source" : "./js/",
-			"target" : "./cdn/compiler/js/"
-		},
-		"jx.qzmin": {
-			"source" : "./tools/jx.custom.js.qzmin",
-			"target" : "./cdn/compiler/js/jx.custom.js"
-		},
-		"jx.ver.qzmin": {
-			"source" : "./tools/jx.custom.js.qzmin",
-			"target" : "./cdn/compiler/js/jx.custom.ver.js",
-			"version" : 1,
-			"compress" : 1
-		},
-		"css" : {
-			"source" : "./css/",
-			"target" : "./cdn/compiler/css/",
-			"blacklist" : ["blacklist.css"]
-		},
-		"html" : {
-			"source" : "./",
-			"target" : "./webserver/compiler/",
-	        "ext": ["html"]
-		},
-		"manifest" : {
-			"source" : "./",
-			"target" : "./webserver/compiler/",
-	        "ext": ["manifest"],
-	        "whitelist": ["cache.manifest"],
-	        "markreplace": 1
-		},
-		"subtype" : {
-			"source" : "./subtype/",
-			"target" : "./cdn/compiler/subtype/",
-			"ext" : ["css", "js", "png", "gif", "jpeg", "jpg"],
-			"recursive" : 1,
-			"version" : 1,
-			"subversion" : 1
-		},
-		"subtype2" : {
-			"source" : "./subtype/",
-			"target" : "./webserver/compiler/subtype/",
-			"ext" : ["html"],
-			"recursive" : 1,
-			"blacklist" : ["index.html"],
-			"version" : 1,
-			"subversion" : 1
-		},
-		"subtype3" : {
-			"source" : "./subtype/index.html",
-			"target" : "./webserver/compiler/subtype/index.html",
-			"subversion" : 1
-		}
-	},
-	"modes" : {
-		"default": ["images", "images.ver", "images.mark", "whitelist", "filecopy", "filecopy.min", "filecopy.mark", "filecopy.mark2", "javascript", "jx.qzmin", "jx.ver.qzmin", "css", "html", "manifest", "subtype", "subtype2", "subtype3"]
-	}
+    "cmarks" : {
+        "%SUB%" : "1006",
+        "%SUB2%" : "."
+    },
+    "rules" : {
+        "images" : {
+            "source" : "./images/",
+            "target" : "./cdn/compiler/images/",
+	        "level" : 1,
+            "recursive" : 1
+        },
+        "images.ver" : {
+            "source" : "./images/",
+            "target" : "./cdn/compiler/images/",
+            "recursive" : 1,
+            "version" : 1
+        },
+        "images.mark" : {
+            "source" : "./images/",
+            "target" : "./cdn/compiler/%SUB%/images/",
+            "recursive" : 1,
+            "markreplace" : 1
+        },
+        "whitelist" : {
+            "source" : "./res/",
+            "target" : "./cdn/compiler/res/",
+            "whitelist" : ["whitelist.js"]
+        },
+        "filecopy" : {
+            "source" : "./res/filecopy.js",
+            "target" : "./cdn/compiler/res/filecopy-publish.js"
+        },
+        "filecopy.min" : {
+            "source" : "./res/filecopy.js",
+            "target" : "./cdn/compiler/res/filecopy-min.js",
+            "compress" : 1
+        },
+        "filecopy.mark" : {
+            "source" : "./res/filecopy.js",
+            "target" : "./cdn/compiler/res/%SUB%/filecopy-mark.js",
+            "markreplace" : 1
+        },
+        "filecopy.mark2" : {
+            "source" : "./res/filecopy.js",
+            "target" : "./cdn/compiler/res/%SUB2%/filecopy-mark2.js",
+            "markreplace" : 1
+        },
+        "javascript": {
+            "source" : "./js/",
+            "target" : "./cdn/compiler/js/"
+        },
+        "jx.qzmin": {
+            "source" : "./tools/jx.custom.js.qzmin",
+            "target" : "./cdn/compiler/js/jx.custom.js"
+        },
+        "jx.ver.qzmin": {
+            "source" : "./tools/jx.custom.js.qzmin",
+            "target" : "./cdn/compiler/js/jx.custom.ver.js",
+            "version" : 1,
+            "compress" : 1
+        },
+        "css" : {
+            "source" : "./css/",
+            "target" : "./cdn/compiler/css/",
+            "blacklist" : ["blacklist.css"]
+        },
+        "html" : {
+            "source" : "./",
+            "target" : "./webserver/compiler/",
+            "ext": ["html"]
+        },
+	"html.extract" : {
+            "source" : "./index.html",
+            "target" : "./webserver/compiler/index.html",
+            "extracttmpl" : "./toolstemplates.js.tmpl",
+            "extractto" : "./js/templates.js"
+        }
+        "manifest" : {
+            "source" : "./",
+            "target" : "./webserver/compiler/",
+            "ext": ["manifest"],
+            "whitelist": ["cache.manifest"],
+            "markreplace": 1
+        },
+        "subtype" : {
+            "source" : "./subtype/",
+            "target" : "./cdn/compiler/subtype/",
+            "ext" : ["css", "js", "png", "gif", "jpeg", "jpg"],
+            "recursive" : 1,
+            "version" : 1,
+            "subversion" : 1
+        },
+        "subtype2" : {
+            "source" : "./subtype/",
+            "target" : "./webserver/compiler/subtype/",
+            "ext" : ["html"],
+            "recursive" : 1,
+            "blacklist" : ["index.html"],
+            "version" : 1,
+            "subversion" : 1
+        },
+        "subtype3" : {
+            "source" : "./subtype/index.html",
+            "target" : "./webserver/compiler/subtype/index.html",
+            "subversion" : 1
+        }
+    },
+    "modes" : {
+        "default": ["images", "images.ver", "images.mark", "whitelist", "filecopy", "filecopy.min", "filecopy.mark", "filecopy.mark2", "javascript", "jx.qzmin", "jx.ver.qzmin", "css", "html", "manifest", "subtype", "subtype2", "subtype3"]
+    }
 }
