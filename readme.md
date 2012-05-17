@@ -3,6 +3,7 @@ WebCompiler 是一个用于编译和部署web项目的python脚本，有点类似java的ant工具，支持
 
 
 ### 配置文件config.json说明
+<pre><code>
 {
     // 文件类型白名单
     "allowext" : ["png", "jpg", "jpeg", "gif", "js", "css", "html", "htm", "manifest"],
@@ -105,3 +106,4 @@ WebCompiler 是一个用于编译和部署web项目的python脚本，有点类似java的ant工具，支持
         "default": ["images"]
     }
 }
+</code></pre>
