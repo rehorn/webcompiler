@@ -61,7 +61,8 @@ class Compile(object):
         self.version = rule.get('version')
         self.subversion = rule.get('subversion')
         self.subtype = rule.get('subtype')
-        self.ifcompress = rule.get('compress', 1) if rule.get('compress') else ifCompress
+        #self.ifcompress = rule.get('compress', 1) if rule.get('compress') else ifCompress
+        self.ifcompress = rule.get('compress', ifCompress)
         self.name = name
         self.compressfiles = []
         self.htmlTmplExtract = False
