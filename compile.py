@@ -43,8 +43,15 @@ modes = {}
 # js压缩工具, css压缩工具
 tools = {
     'googleclosurePath' : os.path.join(sys.path[0], './tools/compiler.jar'),
-    'yuicompiressorPath' : os.path.join(sys.path[0], './tools/yuicompressor-2.4.6.jar'),
-    'htmlTmplExtractPath' : os.path.join(sys.path[0], './tools/htmlTemplateExtractor.py')
+    'yuicompiressorPath' : os.path.join(sys.path[0], './tools/yuicompressor-2.4.6.jar')
+}
+# 扩展脚本
+pyCmd = 'python2.7'
+nodeCmd = 'node'
+extTools = {
+    'cmd_html_tmpl_extract': '%s %s' % (pyCmd, os.path.join(sys.path[0], './tools/htmlTemplateExtractor.py')),
+    'cmd_auto_sprite': '%s %s' % (pyCmd, os.path.join(sys.path[0], './tools/autosprite.py')),
+    'cmd_intelligent_spriter': '%s %s' % (nodeCmd, os.path.join(sys.path[0], './tools/autosprite.py'))
 }
 
 # 默认配置文件
@@ -56,16 +63,14 @@ class Compile(object):
         print 'Complie ', name, 60*'+'
         self.markreplace = rule.get('markreplace', 0)
         # self.target = rule['target'] if not self.markreplace else self.replace(name, rule['target'])
-        self.target = self.replace(name, rule['target'])
+        self.target = self.replace(name, rule.get('target', ''))
         self.source = rule['source']
         self.version = rule.get('version')
         self.subversion = rule.get('subversion')
         self.subtype = rule.get('subtype')
-        #self.ifcompress = rule.get('compress', 1) if rule.get('compress') else ifCompress
-        self.ifcompress = rule.get('compress', ifCompress)
+        self.ifcompress = rule.get('compress', 1) if rule.get('compress') else ifCompress
         self.name = name
         self.compressfiles = []
-        self.htmlTmplExtract = False
         
         # 默认值处理
         # if not self.subtype:
@@ -84,8 +89,12 @@ class Compile(object):
             self.ext = os.path.splitext(self.sourcename)[1][1:]
         
         # 初始化配置项
+        # 外部命令
+        if self.source.lower() == 'ext_command':
+            self.params = rule.get('params')
+            self.runCommand()
         # 合并规则qzmin
-        if self.ext == 'qzmin':
+        elif self.ext == 'qzmin':
             self.loadQzmin()
         # 文件夹规则         
         elif self.ext is None:
@@ -98,15 +107,22 @@ class Compile(object):
             self.moveFiles()
         # 文件规则
         else:
-            if self.ext in ['html', 'htm'] and rule.get('extracttmpl') is not None:
-                self.htmlTmplExtract = True
-                self.extracttmpl = rule.get('extracttmpl')
-                self.extractto = rule.get('extractto')
-
             self.moveFile(self.source, self.target)
             
         self.compressor(self.compressfiles)
-        
+    
+    def runCommand(self):
+        print 'run command start', self.name
+        self.target = self.target.lower()
+        params = json.dumps(self.params)
+        if self.target.startswith('cmd_') and extTools.get(self.target) is not None:
+            cmd = '%s -c \'%s\'' % (extTools.get(self.target), params)
+        else:
+            cmd = '%s -c \'%s\'' % (self.target, params)
+        print cmd
+        os.system(cmd)
+        print 'run command end', self.name
+
     def loadQzmin(self, format=True):
         print 'load qzmin start', self.name
         f = open(self.source)
@@ -154,7 +170,7 @@ class Compile(object):
                 self.createTmpVerFile(tpath, ver)
                 tpath = self.getVersionName(spath, tpath, ver)
             self.createFile(tpath, results)
-            
+
     def moveFiles(self):
         if not self.recursive:
             for f in os.listdir(self.source):
@@ -208,24 +224,14 @@ class Compile(object):
             mkdir(target)
             print 'copyfile %s to %s ' % (source, target)
             shutil.copy(source, target)
-
-            ctype = ext
-            if ext in ['html', 'htm'] and self.htmlTmplExtract:
-                ctype = 'htmlTmplExtract'
-
-            compileFile = {
-                'ext': ext,
-                'ctype': ctype,
-                'path': target
-            }
-            self.compressfiles.append(compileFile)
+            self.compressfiles.append(target)
         else:
             self.createFile(target, open(source).xreadlines())
 
     def replace(self, target, output):
         print 'replace', target
         for m in marks:
-            print 'replace', m, marks.get(m)
+            # print 'replace', m, marks.get(m)
             output = output.replace(m, str(marks.get(m)))
         return output
         print 'replace finish', target  
@@ -247,10 +253,7 @@ class Compile(object):
         if ver is None:
             output = commands.getoutput("svn info %s" % path)
             ver = revFieldP.search(output)
-            if ver:
-                ver = ver.group(1)
-            else:
-                ver = ''
+            ver = ver.group(1) if ver else ''
         return ver
         
     def getVerFromTmpFile(self, path):
@@ -271,18 +274,8 @@ class Compile(object):
         else:
             output = "".join([l for l in contents]).decode('utf-8')
         codecs.open(tpath, "w", "utf-8").write(output)
-        
-        ext = os.path.splitext(tpath)[1][1:]
-        ctype = ext
-        if ext in ['html', 'htm'] and self.htmlTmplExtract:
-            ctype = 'htmlTmplExtract'
-
-        compileFile = {
-            'ext': ext,
-            'ctype': ctype,
-            'path': tpath
-        }
-        self.compressfiles.append(compileFile)
+      
+        self.compressfiles.append(tpath)
 
     def createTmpVerFile(self, tpath, ver):
         tpath = self.getTmpVerFileName(tpath)
@@ -334,17 +327,14 @@ class Compile(object):
     def compressor(self, files):
         print 'compressor start', "-"*40
         if self.ifcompress:
-            for item in files:
-                f = item['path']
-                ctype = item['ctype']
-                if ctype in ["js", "css", "htmlTmplExtract"]:
+            for f in files:
+                filetype = os.path.splitext(f)[1][1:]
+                if filetype in ["js", "css", "html", "htm"]:
                     print 'compressor start', self.name, "-"*40
-                    if ctype == "js":
+                    if filetype == "js":
                         cmd = 'java -jar %s --%s %s --%s_output_file %s.min' % (tools['googleclosurePath'], ctype, f, ctype, f)
-                    elif ctype == "css":
+                    elif filetype == "css":
                         cmd = 'java -jar %s %s -o %s.min --charset utf-8' % (tools['yuicompiressorPath'], f, f)
-                    elif ctype == "htmlTmplExtract":
-                        cmd = 'python2.7 %s -i %s -o %s.min -t %s -j %s' % (tools['htmlTmplExtractPath'], f, f, self.extracttmpl, self.extractto)
                     print cmd
                     os.system(cmd)
                     t = []
@@ -360,10 +350,12 @@ class Compile(object):
 def pickMode(modeRules):
     for ruleName in modeRules:
         v = rules[ruleName]
-        if v.get("relpath"):
-            v['target'] = os.path.join(v['relpath'], v['target'])
-        else:
-            v['target'] = os.path.join(relpath, v['target'])
+        target = v.get("target")
+        if target and not target.startswith('cmd_'):
+            if v.get("relpath"):
+                v['target'] = os.path.join(v['relpath'], v['target'])
+            else:
+                v['target'] = os.path.join(relpath, v['target'])
         Compile(v, ruleName)
         
 def js2json(fileline):
@@ -393,13 +385,13 @@ def parseConfig():
     print "Parse Config start", 60 * '-'
     global allowext, plaintext, relpath, rules, modes, tools, cmarks
     jsonConfig = json.loads(open(pyConfig).read())
-    allowext = jsonConfig.get('allowext') if jsonConfig.get('allowext') else allowext
-    plaintext = jsonConfig.get('plaintext') if jsonConfig.get('plaintext') else plaintext
-    relpath = jsonConfig.get('relpath') if jsonConfig.get('relpath') else relpath
+    allowext = jsonConfig.get('allowext', allowext)
+    plaintext = jsonConfig.get('plaintext', plaintext)
+    relpath = jsonConfig.get('relpath', relpath)
     rules = jsonConfig.get('rules')
-    modes = jsonConfig.get('modes') if jsonConfig.get('modes') else modes
-    cmarks = jsonConfig.get('cmarks') if jsonConfig.get('cmarks') else cmarks
-    tools = jsonConfig.get('tools') if jsonConfig.get('tools') else tools
+    modes = jsonConfig.get('modes', modes)
+    cmarks = jsonConfig.get('cmarks', cmarks)
+    tools = jsonConfig.get('tools', tools)
 
     print "Parse Config end", 60 * '-'
 
@@ -421,11 +413,11 @@ For example:
 def parseMarks():
     global marks, cmarks
     if "Windows" not in platform.platform():
-        output = commands.getoutput("svn info")
-        REV = revFieldP.search(output).group(1)
-        LASTUPDATE = dateFieldP.search(output).group(1)[:19]
-        DATE = time.strftime('%Y-%m-%d %H:%M:%S')
         TIMESTAMP = str(time.time())
+        output = commands.getoutput("svn info")
+        REV = revFieldP.search(output).group(1) if output else TIMESTAMP
+        LASTUPDATE = dateFieldP.search(output).group(1)[:19] if output else TIMESTAMP
+        DATE = time.strftime('%Y-%m-%d %H:%M:%S')
     else:
         REV = DATE = LASTUPDATE = TIMESTAMP = str(time.time())
     marks['%Date%'] = DATE
@@ -461,6 +453,7 @@ if __name__ == '__main__':
         pass
     else:
         if "Windows" not in platform.platform():
+            os.system("svn revert --recursive .")
             os.system("svn up")
             
     if "nocompress" in argS:
